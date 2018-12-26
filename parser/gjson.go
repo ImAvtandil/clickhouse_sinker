@@ -32,3 +32,23 @@ func (c *GjsonMetric) GetFloat(key string) float64 {
 func (c *GjsonMetric) GetInt(key string) int64 {
 	return gjson.Get(c.raw, key).Int()
 }
+
+func (c *GjsonMetric) GetArrayInt(key string) []int64 {
+	val := gjson.Get(c.raw, key)
+	var ran = val.Array()
+	var args = make([]int64, len(ran))
+	for i, name := range val.Array() {
+		args[i] = name.Int()
+	}
+	return args
+}
+
+func (c *GjsonMetric) GetArrayString(key string) []string {
+	val := gjson.Get(c.raw, key)
+	var ran = val.Array()
+	var args = make([]string, len(ran))
+	for i, name := range val.Array() {
+		args[i] = name.String()
+	}
+	return args
+}

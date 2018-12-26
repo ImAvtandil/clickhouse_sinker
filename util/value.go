@@ -14,6 +14,10 @@ func GetValueByType(metric model.Metric, cwt *model.ColumnWithType) interface{} 
 		return metric.GetFloat(cwt.Name)
 	case "string":
 		return metric.GetString(cwt.Name)
+	case "arrayint":
+		return metric.GetArrayInt(cwt.Name)
+	case "arraystring":
+		return metric.GetArrayString(cwt.Name)
 	//never happen
 	default:
 		return ""
@@ -28,6 +32,10 @@ func switchType(typ string) string {
 		return "string"
 	case "Float32", "Float64":
 		return "float"
+	case "Array(UInt8)", "Array(UInt16)", "Array(UInt32)", "Array(UInt64)", "Array(Int8)", "Array(Int16)", "Array(Int32)", "Array(Int64)":
+		return "arrayint"
+	case "Array(String)", "Array(FixString)":
+		return "arraystring"
 	default:
 		panic("unsupport type " + typ)
 	}

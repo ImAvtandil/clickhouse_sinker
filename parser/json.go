@@ -4,8 +4,6 @@ import (
 	"strconv"
 
 	"github.com/housepower/clickhouse_sinker/model"
-
-	"github.com/json-iterator/go"
 )
 
 type Parser interface {
@@ -89,6 +87,13 @@ func (c *JsonMetric) GetInt(key string) int64 {
 		return i
 	}
 	return 0
+}
+
+func (c *JsonMetric) GetArrayInt(key string) []int64 {
+	return []int64{1}
+}
+func (c *JsonMetric) GetArrayString(key string) []string {
+	return []string{""}
 }
 
 func GetJsonShortStr(v interface{}) string {

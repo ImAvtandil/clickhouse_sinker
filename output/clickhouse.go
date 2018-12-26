@@ -2,6 +2,7 @@ package output
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/housepower/clickhouse_sinker/pool"
 	"github.com/housepower/clickhouse_sinker/util"
 
+	"github.com/kshvakov/clickhouse"
 	"github.com/wswz/go_commons/log"
 	"github.com/wswz/go_commons/utils"
 )
@@ -73,7 +75,13 @@ func (c *ClickHouse) Write(metrics []model.Metric) (err error) {
 	for _, metric := range metrics {
 		var args = make([]interface{}, len(c.dmMap))
 		for i, name := range c.dms {
-			args[i] = util.GetValueByType(metric, c.dmMap[name])
+			var arg = util.GetValueByType(metric, c.dmMap[name])
+			if reflect.TypeOf(arg).Kind() == reflect.Slice {
+				args[i] = clickhouse.Array(arg)
+			} else {
+				args[i] = arg
+			}
+			// args[i] = util.GetValueByType(metric, c.dmMap[name])
 		}
 		if _, err := stmt.Exec(args...); err != nil {
 			return err
